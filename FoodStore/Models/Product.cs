@@ -32,5 +32,8 @@ namespace FoodStore.Models
         public string Photo { get; set; }
 
         public Category Category { get; set; }
+
+        public List<CartItem> CartItems { get; set; }
+        public List<OrderItem> OrderItems { get; set; }
     }
 }

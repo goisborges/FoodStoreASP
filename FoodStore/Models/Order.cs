@@ -41,5 +41,8 @@ namespace FoodStore.Models
 
         public string PaymentCode { get; set; }
 
+        //child rel
+        public List<OrderItem> OrderItems { get; set; }
+
     }
 }
