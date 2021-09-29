@@ -1,25 +1,31 @@
 {
   "format": 1,
   "restore": {
-    "/Users/marcosborges/Documents/Food Store ASP/FoodStore/FoodStore/FoodStore.csproj": {}
+    "C:\\Users\\Isabella\\Documents\\GitHub\\FoodStoreASP\\FoodStore\\FoodStore.csproj": {}
   },
   "projects": {
-    "/Users/marcosborges/Documents/Food Store ASP/FoodStore/FoodStore/FoodStore.csproj": {
+    "C:\\Users\\Isabella\\Documents\\GitHub\\FoodStoreASP\\FoodStore\\FoodStore.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/marcosborges/Documents/Food Store ASP/FoodStore/FoodStore/FoodStore.csproj",
+        "projectUniqueName": "C:\\Users\\Isabella\\Documents\\GitHub\\FoodStoreASP\\FoodStore\\FoodStore.csproj",
         "projectName": "FoodStore",
-        "projectPath": "/Users/marcosborges/Documents/Food Store ASP/FoodStore/FoodStore/FoodStore.csproj",
-        "packagesPath": "/Users/marcosborges/.nuget/packages/",
-        "outputPath": "/Users/marcosborges/Documents/Food Store ASP/FoodStore/FoodStore/obj/",
+        "projectPath": "C:\\Users\\Isabella\\Documents\\GitHub\\FoodStoreASP\\FoodStore\\FoodStore.csproj",
+        "packagesPath": "C:\\Users\\Isabella\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Isabella\\Documents\\GitHub\\FoodStoreASP\\FoodStore\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet\\"
+        ],
         "configFilePaths": [
-          "/Users/marcosborges/.config/NuGet/NuGet.Config"
+          "C:\\Users\\Isabella\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net5.0"
         ],
         "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -69,6 +75,12 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.NETCore.App.Host.win-x64",
+              "version": "[5.0.9, 5.0.9]"
+            }
+          ],
           "frameworkReferences": {
             "Microsoft.AspNetCore.App": {
               "privateAssets": "none"
@@ -77,7 +89,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/5.0.401/RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.100-rc.1.21463.6\\RuntimeIdentifierGraph.json"
         }
       }
     }
