@@ -12,7 +12,7 @@ namespace FoodStore.Models
         public int OrderId { get; set; }
 
         [Range(0, 9999999)]
-        [Required (ErrorMessage = "Please make sure the order total was entered"]
+        [Required (ErrorMessage = "Please make sure the order total was entered")]
 
         public double Total { get; set; }
         
