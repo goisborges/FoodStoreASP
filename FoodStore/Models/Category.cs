@@ -11,6 +11,7 @@ namespace FoodStore.Models
         public int CategoryId { get; set; }
 
         [Required(AllowEmptyStrings =false, ErrorMessage ="No empty strings allowed")]
+        [MaxLength(100)]
         public string Name { get; set; }
 
         // child reference
