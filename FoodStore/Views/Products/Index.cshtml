@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<FoodStore.Models.Product>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Products";
 }
 
 <h1>Index</h1>
@@ -9,24 +9,29 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
-<table class="table">
+<table class="table sortable table-striped table-hover">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Name)
+                <a href="#">Name</a>
+                <!--@Html.DisplayNameFor(model => model.Name)-->
+            </th>
+            <th align="center">
+                <a href="#">Price</a>
+                <!--@Html.DisplayNameFor(model => model.Price)-->
+            </th>
+            <th align="center">
+                <a href="#">Weight</a>
+                <!--@Html.DisplayNameFor(model => model.Weight)-->
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Price)
+                <a href="#">Category</a>
+                <!--@Html.DisplayNameFor(model => model.Category)-->
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Weight)
+           *<th>
+                @*@Html.DisplayNameFor(model => model.Photo)*@
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Photo)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Category)
-            </th>
+            
             <th></th>
         </tr>
     </thead>
@@ -36,18 +41,19 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
-            <td>
+            <td align="right">
                 @Html.DisplayFor(modelItem => item.Price)
             </td>
-            <td>
+            <td align="right">
                 @Html.DisplayFor(modelItem => item.Weight)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Photo)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Category.Name)
             </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Photo)
+            </td>
+            
             <td>
                 <a asp-action="Edit" asp-route-id="@item.ProductId">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.ProductId">Details</a> |
