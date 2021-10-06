@@ -4,7 +4,7 @@
     ViewData["Title"] = "Products";
 }
 
-<h1>Index</h1>
+<h1>Products</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -28,7 +28,7 @@
                 <a href="#">Category</a>
                 <!--@Html.DisplayNameFor(model => model.Category)-->
             </th>
-           *<th>
+           <th class="sortable-nosort">
                 @*@Html.DisplayNameFor(model => model.Photo)*@
             </th>
             
@@ -51,7 +51,16 @@
                 @Html.DisplayFor(modelItem => item.Category.Name)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Photo)
+                @if(item.Photo != null)
+                    {
+                        <img class="thumb" src="~/img/products/@item.Photo" alt="Product Photo">
+                }
+                else {
+                    <img class="thumb" src="~/img/placeholder.gif" alt="Product Photo"/>
+                    }
+
+
+                @*@Html.DisplayFor(modelItem => item.Photo)*@
             </td>
             
             <td>

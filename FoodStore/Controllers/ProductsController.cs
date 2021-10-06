@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using FoodStore.Data;
 using FoodStore.Models;
+using Microsoft.AspNetCore.Http;
+using System.IO;
 
 namespace FoodStore.Controllers
 {
@@ -57,10 +59,35 @@ namespace FoodStore.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ProductId,Name,Price,Weight,CategoryId,Photo")] Product product)
+        public async Task<IActionResult> Create([Bind("ProductId,Name,Price,Weight,CategoryId")] Product product, IFormFile Photo)
         {
+            //Bind instantiates and populates the properties of a new Product object
             if (ModelState.IsValid)
             {
+                //check for photo upload and save file if any
+                if (Photo != null)
+                {
+                    //get temp location of uploaded photo
+                    var filePath = Path.GetTempFileName();
+
+                    //create a unique filename so we dont overwrite any existing photos
+                    //GUID is Globally Unique Identifier - built-in MS class
+                    var filename = Guid.NewGuid() + "-" + Photo.FileName;
+
+                    //set destination path dynamically
+                    var uploadPath = System.IO.Directory.GetCurrentDirectory() + "\\wwwroot\\img\\products\\" + filename;
+
+                    //actually execute the file copy now
+                    using ( var stream = new FileStream(uploadPath, FileMode.Create))
+                    {
+                        await Photo.CopyToAsync(stream);
+                    }
+
+                    //set the Photo property name of the new Product object
+                    product.Photo = filename;
+                }
+
+
                 _context.Add(product);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
