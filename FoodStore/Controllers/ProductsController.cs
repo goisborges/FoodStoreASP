@@ -67,21 +67,7 @@ namespace FoodStore.Controllers
                 //check for photo upload and save file if any
                 if (Photo != null)
                 {
-                    //get temp location of uploaded photo
-                    var filePath = Path.GetTempFileName();
-
-                    //create a unique filename so we dont overwrite any existing photos
-                    //GUID is Globally Unique Identifier - built-in MS class
-                    var filename = Guid.NewGuid() + "-" + Photo.FileName;
-
-                    //set destination path dynamically
-                    var uploadPath = System.IO.Directory.GetCurrentDirectory() + "\\wwwroot\\img\\products\\" + filename;
-
-                    //actually execute the file copy now
-                    using ( var stream = new FileStream(uploadPath, FileMode.Create))
-                    {
-                        await Photo.CopyToAsync(stream);
-                    }
+                    var filename = UploadPhoto(Photo);
 
                     //set the Photo property name of the new Product object
                     product.Photo = filename;
@@ -94,6 +80,28 @@ namespace FoodStore.Controllers
             }
             ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "Name", product.CategoryId);
             return View(product);
+        }
+
+
+        //function to upload a photo if the user browse it to upload
+        private static string UploadPhoto(IFormFile Photo)
+        {
+            //get temp location of uploaded photo
+            var filePath = Path.GetTempFileName();
+
+            //create a unique filename so we dont overwrite any existing photos
+            //GUID is Globally Unique Identifier - built-in MS class
+            var filename = Guid.NewGuid() + "-" + Photo.FileName;
+
+            //set destination path dynamically
+            var uploadPath = System.IO.Directory.GetCurrentDirectory() + "\\wwwroot\\img\\products\\" + filename;
+
+            //actually execute the file copy now
+            using (var stream = new FileStream(uploadPath, FileMode.Create))
+            {
+                Photo.CopyTo(stream);
+            }
+            return filename;
         }
 
         // GET: Products/Edit/5
@@ -118,7 +126,7 @@ namespace FoodStore.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ProductId,Name,Price,Weight,CategoryId,Photo")] Product product)
+        public async Task<IActionResult> Edit(int id, [Bind("ProductId,Name,Price,Weight,CategoryId")] Product product, IFormFile Photo)
         {
             if (id != product.ProductId)
             {
@@ -129,6 +137,12 @@ namespace FoodStore.Controllers
             {
                 try
                 {
+                    //upload photo if any
+                    if (Photo != null)
+                    {
+                        var filename = UploadPhoto(Photo);
+                        product.Photo = filename;
+                    }
                     _context.Update(product);
                     await _context.SaveChangesAsync();
                 }

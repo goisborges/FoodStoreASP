@@ -9,12 +9,12 @@ a.navbar-brand {
 
 /* Provide sufficient contrast against white background */
 a {
-  color: #0366d6;
+  color: #536DFE;
 }
 
 .btn-primary {
   color: #fff;
-  background-color: #1b6ec2;
+  background-color: #536DFE;
   border-color: #1861ac;
 }
 
@@ -59,8 +59,9 @@ html {
 }
 
 body {
-  /* Margin bottom by footer height */
-  margin-bottom: 60px;
+    /* Margin bottom by footer height */
+    margin-bottom: 60px;
+    font-family: 'Nanum Gothic', sans-serif;
 }
 .footer {
   position: absolute;
@@ -72,3 +73,11 @@ body {
 .thumb{
     height: 70px;
 }
+.table-striped tbody tr:nth-of-type(2n+1){
+    background-color: #B2DFDB;
+}
+.navbar-dark {
+    background-color: #009688
+}
+
+
