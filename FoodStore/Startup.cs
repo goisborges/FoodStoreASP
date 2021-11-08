@@ -32,9 +32,18 @@ namespace FoodStore
                     Configuration.GetConnectionString("DefaultConnection")));
             services.AddDatabaseDeveloperPageExceptionFilter();
 
-            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddControllersWithViews();
+
+            // add Google OAuth
+            services.AddAuthentication().AddFacebook(options =>
+            {
+                IConfigurationSection facebookAuth = Configuration.GetSection("Authentication:Facebook");
+
+                options.AppId = facebookAuth["AppId"];
+                options.AppSecret = facebookAuth["AppSecret"];
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
