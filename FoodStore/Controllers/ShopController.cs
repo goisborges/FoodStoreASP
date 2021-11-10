@@ -20,5 +20,18 @@ namespace FoodStore.Controllers
             var categories = _context.Categories.OrderBy(c => c.Name).ToList();
             return View(categories);
         }
+
+        //GET: /Shop/ShopByCategory/5
+        public IActionResult ShopByCategory(int id)
+        {
+            // get products in selected category
+            var products = _context.Products.Where(p => p.CategoryId == id).OrderBy(p => p.Name).ToList();
+
+            //get name of selected category
+            var category = _context.Categories.Find(id);
+            ViewBag.Category = category.Name;
+
+            return View(products);
+        }
     }
 }
