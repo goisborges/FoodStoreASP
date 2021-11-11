@@ -44,11 +44,19 @@ namespace FoodStore
                 options.AppId = facebookAuth["AppId"];
                 options.AppSecret = facebookAuth["AppSecret"];
             });
+
+            // session support
+            services.AddSession();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+
+            //session support  don't put at bottom
+            app.UseSession();
+
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

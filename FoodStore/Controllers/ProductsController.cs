@@ -126,7 +126,7 @@ namespace FoodStore.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ProductId,Name,Price,Weight,CategoryId")] Product product, IFormFile Photo)
+        public async Task<IActionResult> Edit(int id, [Bind("ProductId,Name,Price,Weight,CategoryId")] Product product, IFormFile Photo, string CurrentPhoto)
         {
             if (id != product.ProductId)
             {
@@ -142,6 +142,11 @@ namespace FoodStore.Controllers
                     {
                         var filename = UploadPhoto(Photo);
                         product.Photo = filename;
+                    }
+                    else
+                    {
+                        //keep existing photo
+                        product.Photo = CurrentPhoto;
                     }
                     _context.Update(product);
                     await _context.SaveChangesAsync();
