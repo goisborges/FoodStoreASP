@@ -15,8 +15,17 @@ namespace FoodStore.Models
         [Required (ErrorMessage = "Please make sure the order total was entered")]
 
         public double Total { get; set; }
-        
+
+        [Required(AllowEmptyStrings = false, ErrorMessage = "First Name Error")]
+        [Display(Name = "First Name")]
+        public string FirstName { get; set; }
+
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Last Name Error")]
+        [Display(Name = "Last name")]
+        public string LastName { get; set; }
+
         [Required(AllowEmptyStrings = false, ErrorMessage ="Please make sure the order date was entered")]
+        [Display(Name = "Order Date")]
         public DateTime OrderDate { get; set; }
 
         [Required(AllowEmptyStrings = false, ErrorMessage = "Please make sure the address was entered")]
@@ -25,7 +34,7 @@ namespace FoodStore.Models
 
         //Foreign Key
         [Required]
-        public int UserId { get; set; }
+        public string UserId { get; set; }
 
         [Required(AllowEmptyStrings = false, ErrorMessage = "Please make sure the city was entered")]
         public string City { get; set; }
@@ -34,11 +43,13 @@ namespace FoodStore.Models
         public string Province { get; set; }
 
         [Required(AllowEmptyStrings = false, ErrorMessage = "Please make sure the postal code was entered")]
+        [Display (Name ="Postal Code")]
         public string PostalCode { get; set; }
 
         [Required]
         public string Phone { get; set; }
 
+        [Display(Name ="Payment Code")]
         public string PaymentCode { get; set; }
 
         //child rel

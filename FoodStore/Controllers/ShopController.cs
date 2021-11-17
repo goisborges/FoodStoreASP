@@ -1,5 +1,6 @@
 ﻿using FoodStore.Data;
 using FoodStore.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -127,5 +128,35 @@ namespace FoodStore.Controllers
             return RedirectToAction("Cart");
         }
 
+        //GET: /Shop/Checkout
+        [Authorize]
+        public IActionResult Checkout()
+        {
+            return View();
+        }
+
+        //POST: /Shop/Checkout
+        [Authorize]
+        [HttpPost]
+        public IActionResult Checkout([Bind("FirstName, LastName, Address, City, Province, PostalCode, Phone")] Order order)
+        {
+            //autofill total, date, user
+            order.Total = 1;
+            order.OrderDate = DateTime.Now;
+            order.UserId = User.Identity.Name;
+            order.Total = (from c in _context.CartItems
+                           where c.UserId == order.UserId
+                           select c.Quantity * c.Price).Sum();
+
+            //save order to session so we can keep i in memory for asving once payment gets completed
+            //HttpContext.Session.Set only saves string or int
+            //external library can save object - SessionExtensions / SetObject/GetObject
+            //serializes to JSON
+            HttpContext.Session.SetObject("Order", order);
+
+            return RedirectToAction("Payment");
+            
+
+        }
     }
 }
