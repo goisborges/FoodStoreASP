@@ -4,20 +4,31 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Stripe;
+using Stripe.Checkout;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
+
+
 
 namespace FoodStore.Controllers
 {
     public class ShopController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        public readonly ApplicationDbContext _context;
 
-        public ShopController(ApplicationDbContext context)
+        //add config var so we can read values from appsettings.json
+        IConfiguration _iconfiguration;
+
+
+
+        public ShopController(ApplicationDbContext context, IConfiguration configuration)
         {
             _context = context;
+            _iconfiguration = configuration;
         }
         public IActionResult Index()
         {
@@ -106,7 +117,7 @@ namespace FoodStore.Controllers
         public IActionResult Cart()
         {
             //identify the user from the session var
-            var userId = HttpContext.Session.GetString("UserId");
+            var userId = GetUserId();
 
             //load the cart items for this user from the db for display
             //inlcude join tables!!!
@@ -138,7 +149,7 @@ namespace FoodStore.Controllers
         //POST: /Shop/Checkout
         [Authorize]
         [HttpPost]
-        public IActionResult Checkout([Bind("FirstName, LastName, Address, City, Province, PostalCode, Phone")] Order order)
+        public IActionResult Checkout([Bind("FirstName, LastName, Address, City, Province, PostalCode, Phone")] Models.Order order)
         {
             //autofill total, date, user
             order.Total = 1;
@@ -153,10 +164,99 @@ namespace FoodStore.Controllers
             //external library can save object - SessionExtensions / SetObject/GetObject
             //serializes to JSON
             HttpContext.Session.SetObject("Order", order);
+           
 
             return RedirectToAction("Payment");
             
 
         }
+
+        // GET: /Shop/Payment
+        public IActionResult Payment()
+        {
+            return View();
+        }
+
+        //POST: /Shop/CreateCheckoutSession
+        [Authorize]
+        [HttpPost]
+        public IActionResult CreateCheckoutSession()
+        {
+            //get order total
+            var order = HttpContext.Session.GetObject<Models.Order>("Order");
+
+            StripeConfiguration.ApiKey = _iconfiguration.GetSection("Stripe")["SecretKey"];
+
+            var options = new SessionCreateOptions
+            {
+                LineItems = new List<SessionLineItemOptions>
+                {
+                  new SessionLineItemOptions
+                  {
+                    PriceData = new SessionLineItemPriceDataOptions
+                    {
+                        UnitAmount = ((long?)(order.Total * 100)),
+                        Currency = "cad",
+                        ProductData = new SessionLineItemPriceDataProductDataOptions
+                        {
+                            Name = "FoodStore Purchase"
+                        },
+                    },
+                    Quantity = 1
+                    
+                  },
+                },
+                PaymentMethodTypes = new List<string>
+                {
+                  "card"
+                },
+                Mode = "payment",
+                SuccessUrl = "https://" + Request.Host + "/Shop/SaveOrder",
+                CancelUrl = "https://" + Request.Host + "/Shop/Cart",
+            };
+            var service = new SessionService();
+            Session session = service.Create(options);
+
+            Response.Headers.Add("Location", session.Url);
+            return new StatusCodeResult(303);
+        }
+
+        // GET: /Shop/SaveOrder
+        [Authorize]
+        public IActionResult SaveOrder() //After person payed for the order
+        {
+
+            //save order to db
+            var order = HttpContext.Session.GetObject<Models.Order>("Order");
+            _context.Orders.Add(order);
+            _context.SaveChanges();
+
+            //save order details
+            var cartItems = _context.CartItems.Where(c => c.UserId == order.UserId);
+
+            foreach ( var item in cartItems)
+            {
+                var orderItem = new Models.OrderItem
+                {
+                    ProductId = item.ProductId,
+                    Quantity = item.Quantity,
+                    Price = item.Price,
+                    OrderId = order.OrderId
+                };
+                _context.OrderItems.Add(orderItem);
+            }
+            _context.SaveChanges();
+
+            //clear the cart
+            foreach (var item in cartItems)
+            {
+                _context.CartItems.Remove(item);
+            }
+            _context.SaveChanges();
+
+            //redirect to order details page
+            return RedirectToAction("Details", "Orders", new { @id = order.OrderId });
+        }
+    
     }
 }

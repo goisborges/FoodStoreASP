@@ -47,6 +47,9 @@ namespace FoodStore
 
             // session support
             services.AddSession();
+
+            //add Singleton to store API keys - Stripe - add dependency so the controllers can read config values from appsettings.json
+            services.AddSingleton<IConfiguration>(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
